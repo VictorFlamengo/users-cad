@@ -3,6 +3,7 @@ const app = express()
 const bodyParser = require('body-parser')
 const connection = require('./database/database')
 const usersModel = require('./database/users')
+const { where } = require('sequelize')
 connection
         .authenticate()
         .then(() =>{
@@ -18,10 +19,23 @@ app.use(express.static('public'))
 app.use(bodyParser.urlencoded({extended: false}))
 app.use(bodyParser.json())
 
-
-app.get('/',(req, res) =>{
+app.get('/',(req, res) => {
     res.render('index')
 })
+
+app.post('/',(req, res) => {
+    var nomeUser = req.body.nome
+    var senhaUser = req.body.senha
+    const buscaUser = usersModel.findOne({where: {nome:nomeUser, senha:senhaUser}})
+    .then(usuario => {
+        if (usuario) {
+            res.render('logado')
+        } else {
+            res.redirect('/')
+        }
+    })
+})
+    
 
 app.get('/cadastro',(req, res) =>{
     res.render('cadastro')
@@ -41,6 +55,7 @@ app.post('/savecad', (req, res) =>{
 
     }).then(()=>{   
         res.redirect('/')
+    
     })
     .catch((msgErro) =>{
         console.log(msgErro)

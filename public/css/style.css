@@ -21,6 +21,14 @@ form{
     
 }
 
+span{
+    position: absolute;
+    left: 0;
+    font-size: 14px;
+    color: red;
+    display: none;
+}
+
 .btn-position{
     width: 100%;
     text-align: center;
